@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #welcomeMessage {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #5bc0de;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        #taskUpdateForm {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #statusFilter {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido al generador de tareas</h1>
+    <p id="welcomeMessage">Bienvenido, admin!</p>
+    
+    <h2>Registrar Nueva Tarea</h2>
+    <form id="taskForm">
+        <label for="taskId">Código de la tarea:</label>
+        <input type="text" id="taskId" required><br>
+        
+        <label for="taskTitle">Título de la tarea:</label>
+        <input type="text" id="taskTitle" required><br>
+        
+        <label for="taskDescription">Descripción:</label>
+        <textarea id="taskDescription" required></textarea><br>
+        
+        <label for="startDate">Fecha de inicio:</label>
+        <input type="date" id="startDate" required><br>
+        
+        <label for="clientName">Nombre del cliente:</label>
+        <input type="text" id="clientName" required><br>
+        
+        <label for="projectId">ID del proyecto:</label>
+        <input type="text" id="projectId" required><br>
+        
+        <label for="comments">Comentarios:</label>
+        <textarea id="comments"></textarea><br>
+        
+        <label for="status">Estatus:</label>
+        <select id="status">
+            <option value="Por hacer">Por hacer</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Rechazado">Rechazado</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Cerrado">Cerrado</option>
+            <option value="En pruebas de calidad">En pruebas de calidad</option>
+            <option value="En validación por el usuario">En validación por el usuario</option>
+            <option value="En proceso de liberación">En proceso de liberación</option>
+        </select><br>
+        
+        <button type="submit">Agregar Tarea</button>
+        <button type="button" id="clearTasks">Limpiar Tareas</button> <!-- Botón para limpiar tareas -->
+    </form>
+
+    <h2>Tareas Registradas</h2>
+    <div id="statusFilter">
+        <label for="statusFilterSelect">Filtrar por estatus:</label>
+        <select id="statusFilterSelect">
+            <option value="Todos">Todos</option>
+            <option value="Por hacer">Por hacer</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Rechazado">Rechazado</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Cerrado">Cerrado</option>
+            <option value="En pruebas de calidad">En pruebas de calidad</option>
+            <option value="En validación por el usuario">En validación por el usuario</option>
+            <option value="En proceso de liberación">En proceso de liberación</option>
+        </select>
+    </div>
+
+    <table id="taskTable">
+        <thead>
+            <tr>
+                <th>Seleccionar</th>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Fecha de Inicio</th>
+                <th>Nombre del Cliente</th>
+                <th>ID del Proyecto</th>
+                <th>Comentarios</th>
+                <th>Estatus</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Las tareas se agregarán aquí -->
+        </tbody>
+    </table>
+
+    <!-- Sección de actualización de tareas -->
+    <div id="taskUpdateForm">
+        <h3>Actualizar Tarea</h3>
+        <label for="updateStatus">Estatus:</label>
+        <select id="updateStatus">
+            <option value="Por hacer">Por hacer</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Rechazado">Rechazado</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Cerrado">Cerrado</option>
+            <option value="En pruebas de calidad">En pruebas de calidad</option>
+            <option value="En validación por el usuario">En validación por el usuario</option>
+            <option value="En proceso de liberación">En proceso de liberación</option>
+        </select><br>
+        
+        <label for="updateComments">Nuevo comentario:</label>
+        <textarea id="updateComments"></textarea><br>
+        
+        <button type="button" id="updateTaskButton">Actualizar Tarea</button>
+    </div>
+
+    <script>
+        const taskForm = document.getElementById('taskForm');
+        const taskTableBody = document.getElementById('taskTable').getElementsByTagName('tbody')[0];
+        const clearTasksButton = document.getElementById('clearTasks');
+        const updateTaskButton = document.getElementById('updateTaskButton');
+        const updateStatus = document.getElementById('updateStatus');
+        const updateComments = document.getElementById('updateComments');
+        const statusFilterSelect = document.getElementById('statusFilterSelect');
+        let selectedTaskRow = null;
+
+        taskForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const taskId = document.getElementById('taskId').value;
+            const taskTitle = document.getElementById('taskTitle').value;
+            const taskDescription = document.getElementById('taskDescription').value;
+            const startDate = document.getElementById('startDate').value;
+            const clientName = document.getElementById('clientName').value;
+            const projectId = document.getElementById('projectId').value;
+            const comments = document.getElementById('comments').value;
+            const status = document.getElementById('status').value;
+
+            if (!taskId || !taskTitle || !taskDescription || !startDate || !clientName || !projectId) {
+                alert('Por favor, completa todos los campos requeridos.');
+                return;
+            }
+
+            const newRow = taskTableBody.insertRow();
+            newRow.setAttribute('data-id', taskId);
+
+            // Agregar una casilla para seleccionar la tarea
+            const selectCell = newRow.insertCell(0);
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    selectedTaskRow = newRow;
+                    document.getElementById('taskId').value = taskId;
+                    document.getElementById('taskTitle').value = taskTitle;
+                    document.getElementById('taskDescription').value = taskDescription;
+                    document.getElementById('startDate').value = startDate;
+                    document.getElementById('clientName').value = clientName;
+                    document.getElementById('projectId').value = projectId;
+                    document.getElementById('comments').value = comments;
+                    document.getElementById('status').value = status;
+                } else {
+                    selectedTaskRow = null;
+                }
+            });
+            selectCell.appendChild(checkbox);
+
+            newRow.insertCell(1).textContent = taskId;
+            newRow.insertCell(2).textContent = taskTitle;
+            newRow.insertCell(3).textContent = taskDescription;
+            newRow.insertCell(4).textContent = startDate;
+            newRow.insertCell(5).textContent = clientName;
+            newRow.insertCell(6).textContent = projectId;
+            newRow.insertCell(7).textContent = comments;
+            newRow.insertCell(8).textContent = status;
+
+            taskForm.reset();
+        });
+
+        clearTasksButton.addEventListener('click', function() {
+            taskTableBody.innerHTML = '';
+        });
+
+        updateTaskButton.addEventListener('click', function() {
+            if (!selectedTaskRow) {
+                alert('Por favor, selecciona una tarea para actualizar.');
+                return;
+            }
+
+            const updatedStatus = updateStatus.value;
+            const newComment = updateComments.value;
+
+            // Actualizar estatus
+            selectedTaskRow.cells[8].textContent = updatedStatus;
+
+            // Concatenar el nuevo comentario con la fecha
+            if (newComment.trim() !== '') {
+                selectedTaskRow.cells[7].textContent += `\n${newComment} (Actualizado: ${new Date().toLocaleString()})`;
+            }
+
+            updateComments.value = '';
+            updateStatus.value = 'Por hacer';
+            selectedTaskRow = null;
+        });
+
+        statusFilterSelect.addEventListener('change', function() {
+            const selectedStatus = statusFilterSelect.value;
+            for (let row of taskTableBody.rows) {
+                const taskStatus = row.cells[8].textContent;
+                if (selectedStatus === 'Todos' || taskStatus === selectedStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
